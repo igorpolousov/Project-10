@@ -7,6 +7,8 @@
 
 import UIKit
 
+
+// Класс в котором указаны свойства Person
 class Person: NSObject {
     var name: String
     var image: String
