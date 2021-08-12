@@ -87,34 +87,53 @@ class ViewController: UICollectionViewController,UIImagePickerControllerDelegate
         
     }
    
-    
+    // Функция для кнопки добавить изображение в которой вызывается UIImagePicker
     @objc func addNewPerson() {
         
+        // Создаем объект сос свойством UIImagePickerController
         let picker = UIImagePickerController()
+        // Добавляем свойство в пикер чтобы можно было выбрать нужную часть изображения
         picker.allowsEditing = true
+        
+        if  UIImagePickerController.isSourceTypeAvailable(.camera) {
+            // Выбирает взять фотографии с камеры(сделать фото)
+            picker.sourceType = .camera
+        } else {
+            // Выбирает взять фотографии с устройства
+            picker.sourceType = .photoLibrary
+        }
+        
+        
+        // Свойство в котором указывается какой объект будет управлять пикером. Требует добавления соотвествия протоколам UIImagePickerControllerDelegate, UINavigationControllerDelegate, если управления нет = nil, то происходить действия указанного в методе imagePickerController не будет
         picker.delegate = self
+        // Показать пикер
         present(picker, animated: true)
         
     }
-    
+    // Метод в котором указано что будет сделано когда будет вызван пикер
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        // Предствить выбранный объект из пикера как класс UIImage
         guard let image = info[.editedImage] as? UIImage else { return }
-        
+        // Присваивается уникальное имя для изображения
         let imageName = UUID().uuidString
+        // Указывается путь к картинке с именем imageName
         let imagePath = getDocumentsDirectory().appendingPathComponent(imageName)
-        
+        // Переводим картинку в формат jpeg
         if let jpegData = image.jpegData(compressionQuality: 0.8) {
+            // После того как изобразжение переведено в jpeg позволяет записать в папку с указанным путем
             try? jpegData.write(to: imagePath)
         }
-        
+        // создает константу класса Person
         let person = Person(name: "Unknown", image: imageName)
+        // Добавили в массив people
         people.append(person)
+        // Перезагрузили таблицу
         collectionView.reloadData()
-        
+        // После завершения всех действий убирает из памяти picker controller
         dismiss(animated: true)
         
     }
-
+// Метод который позволяет получить имя пути к папке documents пльзователя на устройстве
     func getDocumentsDirectory() -> URL {
         let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
         return paths[0]
