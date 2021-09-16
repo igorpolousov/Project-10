@@ -46,7 +46,7 @@ class ViewController: UICollectionViewController,UIImagePickerControllerDelegate
         cell.name.text = person.name
         // Рамка для картинки серого цвета
         cell.imageView.layer.borderColor = UIColor(white: 0, alpha: 0.4).cgColor
-        // Толщина картинки
+        // Толщина рамки картинки
         cell.imageView.layer.borderWidth = 2
         // Закругление краев картинки
         cell.imageView.layer.cornerRadius = 4
